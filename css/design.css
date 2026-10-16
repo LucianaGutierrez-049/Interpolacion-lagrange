@@ -1,0 +1,228 @@
+/* Presentación del laboratorio. No modifica los algoritmos de interpolación. */
+:root {
+  --ink: #183e39;
+  --teal: #116c5e;
+  --paper: #f3f5f2;
+  --line: #dce5df;
+  --muted: #5b716a;
+  --gold: #f4c76a;
+  --radius: 20px;
+}
+body {background: var(--paper); color: var(--ink); font-size: 15px; line-height: 1.65;}
+.wrap {max-width: 1360px; padding-inline: 36px;}
+.topbar {min-height: 82px; padding-block: 20px; border: 0;}
+.brand {font-size: 17px; letter-spacing: 1.7px;}
+.topbar div {gap: 12px;}
+.topbar div a {padding: 8px 14px; border-radius: 9px; color: #425e55; font-weight: 600;}
+.topbar div a:hover {background: #e2ebe3;}
+header {background: #133d34; border-top: 1px solid #244f42;}
+.hero {grid-template-columns: 1.5fr 1fr; gap: 80px; padding-block: 42px;}
+h1 {font-size: clamp(34px, 4vw, 54px); font-weight: 730; letter-spacing: -2px; line-height: 1.12; margin: 14px 0;}
+h1 span {color: #bce8ca;}
+.hero-copy {font-size: 15px; line-height: 1.8; max-width: 540px; margin: 18px 0;}
+.hero-tags span {color: #dceee3; font-size: 10px; letter-spacing: .3px; border-color: #68977b66; background: #ffffff05;}
+.hero-equation {border-color: #70997e55; background: #ffffff05; border-radius: 20px; padding: 25px 30px;}
+.hero-equation p {font-size: 32px; margin: 14px 0;}
+.hero-equation small {font-size: 12px; line-height: 1.9;}
+.hero-equation svg {height: 60px; margin-top: 10px; opacity: .8;}
+main.wrap {padding-top: 28px;}
+.eyebrow {font-size: 10px; letter-spacing: 1.8px; font-weight: 750; color: #4a7460;}
+h2 {font-size: 23px; letter-spacing: -.65px; line-height: 1.35;}
+h3 {font-size: 16px; letter-spacing: -.2px;}
+.method-bar {padding: 24px 28px; gap: 30px; border: 1px solid #cadbd0; box-shadow: 0 5px 18px #193e2910; margin-bottom: 24px;}
+.method-bar>div:last-child {min-width: 350px;}
+.method-bar label {font-size: 11px; text-transform: uppercase; letter-spacing: 1px; color: #5b716a;}
+#method-description {font-size: 13px; color: #526c60;}
+select {min-height: 48px; padding: 12px 15px; background: #f4f8f2; border-color: #b3ccbc; font-size: 14px; border-radius: 10px;}
+.workspace-tabs {max-width: 560px; padding: 5px; border-radius: 12px; border: 0; background: #e4ebe3; margin-bottom: 30px;}
+.workspace-tabs button {border-radius: 9px; padding: 13px 18px; font-size: 13px;}
+.workspace-tabs button[aria-selected="true"] {color: #174f3d; box-shadow: 0 2px 5px #243f2010;}
+.section-heading {margin-block: 12px 22px;}
+.section-heading h2 {font-size: 28px; letter-spacing: -.8px;}
+.badge {background: #eaf1e3; color: #39664e; font-weight: 650; border-color: #d0ddc7; font-size: 11px;}
+.layout, .newton-layout {grid-template-columns: 350px minmax(0,1fr); gap: 28px;}
+.layout>* {min-width: 0;}
+.card {border: 1px solid var(--line); border-radius: var(--radius); padding: 28px; margin-bottom: 24px; box-shadow: 0 4px 18px #1b3c2805;}
+.input, .newton-input-card {border: 1px solid #c6d9ca; border-top: 4px solid #2b7758; padding: 25px; background: #fff;}
+.input h2 {font-size: 23px; margin-bottom: 10px;}
+.input>p:not(.eyebrow) {color: var(--muted);}
+input {min-height: 44px; background: #fbfcf9; border: 1px solid #c7d6cb; padding: 10px 12px; font-size: 15px; font-variant-numeric: tabular-nums;}
+input:hover {border-color: #78a58a;}
+input:focus, select:focus {outline: 3px solid #bbe5d2; outline-offset: 1px; border-color: #398567;}
+label {color: #375e4d; font-size: 13px; font-weight: 650; margin-top: 20px;}
+button {min-height: 44px; border-color: #c5d7ca; border-radius: 10px; font-size: 13px; padding: 12px 15px; font-weight: 650;}
+button:hover {background: #edf5e8; border-color: #9bbb9e;}
+.primary {background: #176c50; border-color: #176c50; box-shadow: 0 3px 6px #176c5015; color: #fff;}
+.primary:hover {background: #0f513d; border-color: #0f513d;}
+.quiet {background: transparent; box-shadow: none; color: #67776c;}
+th {font-size: 11px; font-weight: 700; letter-spacing: .4px; color: #587462; background: #f6f8f3;}
+th, td {padding: 13px 12px; border-bottom-color: #e1e9de;}
+table {font-size: 13px;}
+td {font-variant-numeric: tabular-nums;}
+.input th, .input td {padding: 10px 5px;}
+.input th {background: transparent;}
+tbody tr:last-child td, tbody tr:last-child th {border-bottom: 0;}
+.table-scroll {border: 1px solid #dfe7dc; border-radius: 12px; overflow: auto; max-width: 100%;}
+.table-scroll:focus-visible {outline: 3px solid #8cc5ac; outline-offset: 3px;}
+caption {font-size: 12px; color: #536c5c; padding: 12px; background: #fafcf8;}
+.node-input-table caption {background: transparent; padding: 0 0 10px;}
+.hint {font-size: 12px; line-height: 1.75; color: #5f7468;}
+.result, .answer-overview {
+  background: #143e33;
+  border: 1px solid #234f3d;
+  border-top: 4px solid var(--gold);
+  border-radius: var(--radius);
+  padding: 30px 32px;
+  color: #fff;
+  box-shadow: 0 10px 24px #173b2b12;
+}
+.result::after {display: none;}
+.answer-label {display: flex; align-items: center; gap: 10px; color: #f7d994; font-size: 10px; font-weight: 750; letter-spacing: 1.8px;}
+.answer-dot {display: inline-block; width: 8px; height: 8px; border-radius: 50%; background: #f4c76a; box-shadow: 0 0 0 4px #f4c76a15; flex-shrink: 0;}
+.result #result-title, #newton-overview #newton-overview-title {
+  color: #fff5c5;
+  font-size: clamp(28px, 3.1vw, 46px);
+  line-height: 1.2;
+  font-weight: 730;
+  letter-spacing: -1.4px;
+  font-variant-numeric: tabular-nums;
+  margin: 20px 0 10px;
+  overflow-wrap: anywhere;
+}
+.answer-caption {display: block; color: #bad0bc; font-size: 11px; letter-spacing: .2px;}
+.result #interpretation, #newton-overview-interpretation {color: #e0edde; font-size: 14px; line-height: 1.8; margin-top: 20px; padding-top: 18px; border-top: 1px solid #466953;}
+.answer-footer {color: #b7d0bb; font-size: 11px; padding-top: 6px;}
+.result .warning {background: #fff2cd; color: #705014;}
+.formula {border: 1px solid #d6e2d2; border-left: 4px solid #79a46d; background: #f1f6ed; border-radius: 10px; padding: 18px 20px; font-size: 18px; color: #254e38; line-height: 1.95; overflow-wrap: anywhere;}
+#sum, #polynomial, #newton-standard, #newton-polynomial {background: #fff8e4; border-color: #e6d69f; border-left: 4px solid #d7ad46; color: #4d421f; font-weight: 600;}
+#sum {font-size: 20px;}
+.steps {gap: 16px; margin-block: 18px;}
+.step {background: #f8faf5; border: 1px solid #e0e8da; padding: 20px; border-radius: 12px;}
+.step strong {color: #226746;}
+.step>p {font-size: 13px; line-height: 1.9;}
+.step>p:last-child {padding-top: 12px; margin-bottom: 0; border-top: 1px dashed #d5e1cc;}
+#checks td:nth-child(3), #newton-checks td:nth-child(3) {background: #eff6e8; color: #245f3b; font-weight: 750;}
+.check-ok {color: #24623c; background: #e9f4e1; font-weight: 700;}
+.check-fail {color: #9a381c; background: #fff0e6;}
+.legend {padding: 16px 0 0; color: #536d5d; gap: 12px 20px; line-height: 1.8;}
+.curve {stroke: #217955; stroke-width: 3.5;}
+.node {fill: #1b4834;}
+.evaluated {fill: #dc972c; stroke-width: 3;}
+.grid {stroke: #e4ebe0;}
+svg text {fill: #4c6759;}
+.newton-intro {font-size: 14px; color: #5b7166; margin-bottom: 24px;}
+.newton-input-card {position: static;}
+.newton-actions {grid-template-columns: 1fr; gap: 0;}
+.newton-actions button {font-size: 13px; padding: 13px;}
+.newton-actions .primary {order: -1;}
+#newton-manual {background: #f1f6ea; border-color: #c9d9b9;}
+.newton-note {background: #edf1e7; border-color: #dce4d4; font-size: 12px; padding: 22px;}
+.newton-status {background: #e9efe5; border-left: 3px solid #6b946a; border-radius: 0 9px 9px 0; color: #42614b; font-size: 12px; margin-bottom: 20px; padding: 12px 16px; overflow-wrap: anywhere;}
+#newton-results .card>h2 {font-size: 24px;}
+.divided-table {min-width: 540px;}
+.divided-table th, .divided-table td {padding: 15px;}
+.divided-table th {font-size: 11px;}
+.divided-table .coefficient-cell {background: #e5f1d8; color: #27502a; border-bottom: 2px solid #accb8c; font-weight: 750; font-size: 15px;}
+.divided-table small {color: #5d7154; font-weight: 500;}
+.coefficient-label {color: #4f7339; font-size: 10px;}
+.empty-cell {background: #fafcf8; color: #a6b1a2;}
+.coefficients-grid {gap: 12px; margin-block: 20px 6px; grid-template-columns: repeat(auto-fit,minmax(135px,1fr));}
+.coefficient-tile {border-radius: 12px; background: #f3f7ed; border-color: #d5e3c8; padding: 18px;}
+.coefficient-tile span {color: #526c48; line-height: 1.6;}
+.coefficient-tile strong {font-size: 28px; color: #24512b;}
+.coefficient-tile small {color: #5b7152;}
+summary {border-radius: 10px; border-color: #d5e0ce; background: #f3f7ee; color: #2b5d3a; padding: 15px 18px; font-size: 13px;}
+summary:hover {background: #eaf2df;}
+details[open]>summary {border-bottom: 2px solid #a8c790;}
+#newton-standard-decimal {font-size: 13px; padding: 12px 16px; background: #f7f8f3; border-radius: 8px; overflow-wrap: anywhere;}
+#newton-evaluation .newton-result {background: #e8f3e2; border: 1px solid #c0d7ad; border-left: 4px solid #59884a; padding: 22px;}
+#newton-result-title {font-size: 31px; color: #23552b; font-variant-numeric: tabular-nums; overflow-wrap: anywhere;}
+.newton-result p {color: #385d3a;}
+.newton-study {background: #eef2e8; border: 1px solid #d8e2cd; padding: 28px; margin-top: 30px;}
+.newton-study h2 {font-size: 23px;}
+.newton-study .answer-row {grid-template-columns: 1fr;}
+.newton-study .answer-row button {font-size: 13px;}
+#newton-feedback {padding: 4px 0; color: #225e3f;}
+.guide-grid {gap: 18px;}
+.guide-grid .card {border-top: 3px solid #9fbd83; background: #fff;}
+.step-number {background: #e9f1dd; color: #4a7037;}
+.exam-notes {background: #f5eedc; border-left-color: #d4ab55; border-radius: 0 14px 14px 0;}
+.practice {background: #163e33; border-color: #163e33; color: #fff;}
+.practice .hint {color: #bad1bb;}
+.practice-data {color: #e6f0de;}
+.practice .primary {background: #d7e9bb; border-color: #d7e9bb; color: #26402a;}
+.practice .primary:hover {background: #e4f2cf;}
+.warning {border: 1px solid #e6cc85; background: #fff6dd; color: #73531b; font-size: 13px;}
+.error {border: 1px solid #edb8ae; background: #fff0ec; color: #a53526; font-size: 13px;}
+footer {padding: 24px 0 18px; border-top: 1px solid #d9e3d5; margin-top: 20px; font-size: 12px; gap: 15px;}
+@media (min-width: 1150px) {
+  #newton-results .steps {grid-template-columns: repeat(2,minmax(0,1fr));}
+}
+@media (max-width: 1100px) {
+  .layout, .newton-layout {grid-template-columns: 310px minmax(0,1fr); gap: 22px;}
+  .wrap {padding-inline: 26px;}
+  .hero {gap: 40px;}
+  .card {padding: 24px;}
+  .result, .answer-overview {padding: 27px;}
+  .method-bar>div:last-child {min-width: 310px;}
+}
+@media (max-width: 850px) {
+  .layout, .newton-layout {grid-template-columns: minmax(0,1fr); gap: 0;}
+  .input {position: static;}
+  .hero {grid-template-columns: 1fr; padding-block: 32px;}
+  .hero-equation {display: none;}
+  .method-bar {flex-direction: column; align-items: stretch; gap: 18px;}
+  .method-bar>div:last-child {min-width: 0;}
+  .newton-input-card {margin-bottom: 18px;}
+  .newton-note {padding: 18px 22px;}
+  .newton-actions {grid-template-columns: 1fr 1fr; gap: 10px;}
+  .newton-actions .primary {order: 0;}
+  .result #result-title, #newton-overview #newton-overview-title {font-size: clamp(27px, 5vw, 42px);}
+  .guide-grid {grid-template-columns: 1fr 1fr;}
+  #newton-results .steps {grid-template-columns: 1fr;}
+}
+@media (max-width: 520px) {
+  .wrap {padding-inline: 18px;}
+  .topbar {padding-block: 16px; gap: 10px;}
+  .topbar div {gap: 0; flex-wrap: wrap;}
+  .topbar div a {padding: 6px 10px; font-size: 11px;}
+  .brand {font-size: 15px;}
+  h1 {font-size: 35px; letter-spacing: -1.4px;}
+  .hero-copy {font-size: 14px;}
+  .hero-tags {gap: 6px;}
+  .hero-tags span {padding: 5px 9px; font-size: 9px;}
+  .method-bar {padding: 20px; border-radius: 15px;}
+  .workspace-tabs {width: 100%;}
+  .workspace-tabs button {padding: 12px 10px; font-size: 11px;}
+  .section-heading {gap: 12px; flex-wrap: wrap;}
+  .section-heading h2 {font-size: 25px;}
+  .card {padding: 21px; border-radius: 16px; margin-bottom: 20px;}
+  .result, .answer-overview {padding: 25px 22px;}
+  .answer-label {font-size: 9px; letter-spacing: 1.2px;}
+  .result #result-title, #newton-overview #newton-overview-title {font-size: 28px; letter-spacing: -1px;}
+  .result #interpretation, #newton-overview-interpretation {font-size: 13px;}
+  .formula, #newton-results .formula {font-size: 16px; padding: 16px;}
+  #sum {font-size: 17px;}
+  .newton-actions {grid-template-columns: 1fr; gap: 0;}
+  .newton-actions .primary {order: -1;}
+  .coefficients-grid {grid-template-columns: repeat(2,minmax(0,1fr)); gap: 10px;}
+  .coefficient-tile {padding: 14px;}
+  .coefficient-tile strong {font-size: 25px;}
+  .guide-grid, .steps {grid-template-columns: 1fr;}
+  .newton-study {padding: 21px;}
+  .answer-row {grid-template-columns: 1fr;}
+  th, td {padding: 11px;}
+  footer {flex-direction: column;}
+}
+@media (prefers-reduced-motion: reduce) {
+  html {scroll-behavior: auto;}
+  button {transition: none;}
+}
+@media print {
+  .result, .answer-overview {background: #fff!important; border: 2px solid #284f32; color: #183e39; box-shadow: none;}
+  .answer-label, .answer-caption, .answer-footer, .result #result-title,
+  #newton-overview #newton-overview-title, .result #interpretation,
+  #newton-overview-interpretation {color: #183e39;}
+  .answer-dot {background: #284f32; box-shadow: none;}
+  .newton-layout, .layout {display: block;}
+}

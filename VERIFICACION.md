@@ -1,5 +1,31 @@
 # Verificación del proyecto — Sesión 8
 
+## Extensión de la Sesión 9 — 15 de octubre de 2026
+
+Se revisaron las 6 páginas de GAA y las 40 de GT de la Sesión 9, incluyendo las fórmulas y tablas que son imágenes. La tarea está en las páginas 3-5 de GAA; la recurrencia, tabla y construcción del polinomio están en las páginas 6-15 de GT. Newton-Gregory (GT 20-28) corresponde a nodos equiespaciados; el caso 1,2,4,7 requiere diferencias divididas.
+
+Se añadió Newton al mismo proyecto mediante un selector de método. El motor, interfaz y pruebas anteriores de Lagrange se conservaron. El SVG común admite el evaluador y las unidades de Newton sin alterar los valores predeterminados de Lagrange.
+
+| Verificación de Newton | Resultado |
+|---|---|
+| Tabla completa, seis diferencias y primera fila | 20; 22.5; 110/3; 5/6; 17/6; 1/3. Coeficientes 45,20,5/6,1/3. |
+| Forma de Newton calculada | 45 + 20(x−1) + (5/6)(x−1)(x−2) + (1/3)(x−1)(x−2)(x−4). |
+| Expansión automática | (1/3)x³ − (3/2)x² + (133/6)x + 24. |
+| Evaluación anidada | P₃(5)=139 ms para 500 req/s. |
+| Nodos de la tarea | 45,65,110,220; cuatro residuos cero. |
+| Cantidad variable | Motor e interfaz probados con 2,3,4,5,8 puntos; tabla hasta orden m−1. |
+| Desarrollo manual | Datos, primera columna, recurrencia y sustituciones de cada diferencia, tabla, coeficientes, formas del polinomio, expansión, aportes, evaluación anidada y comprobación. |
+| Práctica | Ocultar/mostrar solución, comprobar respuesta correcta/incorrecta/vacía y borrar resultados anteriores al editar. |
+| Entradas inválidas | Rechazo de vacíos, texto, NaN, Infinity, longitudes distintas, cantidad fuera de 2-8, x repetidos y x_eval inválido. |
+| Gráfica | SVG con 401 muestras, nodos y punto evaluado, ejes de carga/latencia, rangos variables y extrapolación. |
+| Conservación de Lagrange | 19/19 pruebas originales y verificación de interfaz original aprobadas. |
+
+Comandos vigentes: los tres de la sección de pruebas de ambos métodos en README. Resultado: **19/19 pruebas de Lagrange, 33/33 de Newton y ambas verificaciones de interfaz aprobadas**. Las verificaciones de interfaz se ejecutan sobre un DOM mínimo simulado en Node y no sustituyen una prueba real de navegador.
+
+**Límite de esta revisión:** no se pudo verificar visualmente esta ampliación. La conexión inicial del control de navegador falló; el servidor local en 8080 no respondió. No se autorizó iniciar el puerto alternativo 8081 y la política del navegador bloqueó `file://`. No se intentó eludir ese bloqueo. El diseño adaptable está implementado, pero no se afirma revisión visual de Newton ni de todos los tamaños de pantalla. El archivo index.html puede abrirse manualmente con un navegador o con Live Server.
+
+Las secciones siguientes conservan la revisión histórica de Lagrange y sus limitaciones en cada versión.
+
 ## Actualización: diseño y preparación para examen
 
 La revisión original de abajo describe la primera versión. La versión actual añade una guía de examen, un modo de práctica que oculta la solución y comprueba la respuesta, y las bases y el polinomio expandidos desde los nodos. Se aprobaron **19/19 pruebas** y la verificación adicional de interfaz, incluida la práctica. El navegador HTTP local permitió comprobar la vista estrecha y probar ocultar/mostrar solución y la respuesta 55.25; captura en `vista-previa.png`. Se resolvió así el bloqueo de inspección de la primera versión para la vista observada. No se ha realizado una revisión visual de todos los tamaños de pantalla.

@@ -1,6 +1,6 @@
-# Métodos Numéricos — Interpolación de Lagrange · Sesión 8
+# Métodos Numéricos — Interpolación de Lagrange y Newton · Sesiones 8 y 9
 
-Aplicación académica independiente que estima la latencia de un microservicio a partir de cuatro nodos editables. HTML5, CSS3 y JavaScript vanilla, sin dependencias externas ni librerías matemáticas.
+Aplicación académica que estima la latencia de un microservicio. Incluye Lagrange con cuatro nodos y Newton por diferencias divididas con 2 a 8 puntos. HTML5, CSS3 y JavaScript vanilla, sin dependencias externas ni librerías matemáticas.
 
 ## Ejecución
 
@@ -70,7 +70,90 @@ La sección **Guía de examen** explica cuatro pasos: organizar nodos, construir
 
 El desarrollo mostrado sirve para estudiar. Ahora incluye expresiones algebraicas de las bases y del polinomio en decimal; la Parte A sigue siendo una entrega manual distinta, que debe contener tu desarrollo y las justificaciones solicitadas.
 
-## Informe académico
+## Newton por Diferencias Divididas - Sesión 9
 
-El informe de la sesión está disponible en [Informe_Lagrange_Sesion8.pdf](documentacion/Informe_Lagrange_Sesion8.pdf).
+El selector **Método** del mismo `index.html` permite pasar entre Lagrange y Newton conservando sus entradas independientes. Newton admite **2 a 8 puntos**, con grado máximo de 1 a 7. No requiere nodos equiespaciados y no utiliza bibliotecas de interpolación.
 
+### Objetivo y fundamento
+
+Construir la tabla triangular completa desde los vectores X e Y, obtener el polinomio, expandirlo a la forma estándar, evaluar un punto y comprobar los nodos. Se sigue la recurrencia de la Guía Teórica de la Sesión 9, páginas 6 a 15, y los objetivos de la Guía Autónoma, páginas 3 a 5.
+
+La columna de orden cero es `T[i][0] = Y[i]`. Los demás órdenes se calculan mediante:
+
+```text
+T[i][j] = (T[i+1][j-1] - T[i][j-1]) / (X[i+j] - X[i])
+```
+
+`Newton.diferencias_divididas(X, Y)` devuelve una matriz cuadrada con el triángulo superior de valores; las posiciones que no corresponden son `null`. La construcción cuesta O(m²) en tiempo y memoria para m puntos. No redondea valores intermedios. La primera fila contiene los coeficientes `a[k] = T[0][k]`.
+
+```text
+Pn(x) = a0 + a1(x-x0) + a2(x-x0)(x-x1) + ...
+```
+
+`Newton.expandir(X, a)` multiplica manualmente los factores y reúne términos; devuelve coeficientes estándar en orden ascendente `[c0,c1,...]` y el desarrollo de cada producto. La evaluación no usa estos coeficientes expandidos: `Newton.evaluar(X, a, x_eval)` utiliza multiplicación anidada O(m), iniciando en el último coeficiente y recorriendo hacia atrás `b = a[k] + (x_eval-X[k])*b`.
+
+Newton-Gregory se utiliza para nodos equiespaciados. El caso de la Sesión 9 utiliza Newton por diferencias divididas porque los nodos 1,2,4,7 no son equiespaciados.
+
+### Caso de estudio
+
+`X = [1,2,4,7]`, `Y = [45,65,110,220]`, `x_eval = 5`. x está expresada en unidades de 100 req/s e y en milisegundos; x = 5 equivale a 500 req/s.
+
+| xᵢ | f[xᵢ] | 1.ª diferencia | 2.ª diferencia | 3.ª diferencia |
+|---:|---:|---:|---:|---:|
+| 1 | 45 | 20 | 5/6 | 1/3 |
+| 2 | 65 | 45/2 | 17/6 | |
+| 4 | 110 | 110/3 | | |
+| 7 | 220 | | | |
+
+```text
+P3(x) = 45 + 20(x-1) + (5/6)(x-1)(x-2) + (1/3)(x-1)(x-2)(x-4)
+P3(x) = (1/3)x³ - (3/2)x² + (133/6)x + 24
+P3(5) = 45 + 80 + 10 + 4 = 139 ms
+```
+
+Los cuatro nodos producen 45, 65, 110 y 220, con residuos cero en el caso de estudio. La tabla de comprobación utiliza tolerancia `1e-9 * max(1,abs(yi))` para números de punto flotante. El residuo en los nodos no es el error de aproximación de la función real entre nodos; no se presenta una cota de ese error sin información adicional de la función.
+
+Estos resultados de control están en las pruebas y esta documentación. El algoritmo los calcula desde los datos: no contiene el resultado 139 ni los coeficientes particulares del caso.
+
+### Cómo utilizar Newton
+
+1. Abre `index.html` con un navegador, o con Live Server; el proyecto sigue sin requerir instalación.
+2. En **Método**, selecciona **Newton - Diferencias Divididas**.
+3. Elige la cantidad de puntos e ingresa xᵢ, yᵢ y x_eval. Usa punto decimal. Al cambiar la cantidad se conservan las filas que sigan correspondiendo; las filas nuevas quedan vacías.
+4. **Construir tabla** muestra datos, tabla, diferencias y coeficientes. No requiere x_eval. **Resolver con Newton** agrega polinomios, evaluación, validación y gráfica.
+5. **Ver desarrollo manual** abre las operaciones por órdenes, la expansión de productos y la evaluación anidada. Muestra la solución aunque estuviera oculta por la práctica.
+6. **Cargar ejemplo Sesión 9** restaura los cuatro nodos de la tarea y calcula P₃(5). **Limpiar Newton** vacía los valores y oculta la solución; conserva la cantidad de filas elegida.
+
+Los resultados siguen este orden: datos y primera columna, tabla completa, diferencias paso a paso, coeficientes, forma de Newton, forma estándar, sustitución y resultado, comprobación de nodos y gráfica. Los ejes son **Carga concurrente (100 req/s)** y **Latencia media (ms)**. Para ejercicios de otro contexto interpreta las unidades según el enunciado. Los rangos se adaptan a los datos e incluyen x_eval cuando está fuera, con aviso de extrapolación.
+
+### Modo práctica/examen
+
+Selecciona de 2 a 8 puntos e ingresa otro ejercicio. **Ocultar solución y practicar Newton** oculta todos los resultados, incluida la tabla y gráfica. Resuelve en papel y usa **Comprobar respuesta de Newton**: la respuesta se compara con tolerancia `1e-6 * max(1,abs(resultado))` sin revelar la solución. **Mostrar solución de Newton** vuelve a calcular y mostrar todos los pasos. Editar los datos oculta la solución anterior y borra la respuesta y la retroalimentación, para evitar comparar ejercicios distintos.
+
+### Validaciones y precisión
+
+El motor rechaza vectores con distinta longitud, cantidades fuera de 2 a 8, campos vacíos, valores no numéricos, NaN, Infinity, x repetidos y x_eval inválido. En caso de repetición muestra: “No es posible calcular diferencias divididas porque existen valores x repetidos y se produciría una división entre cero.” También detecta desbordamientos aritméticos y rangos gráficos no representables.
+
+Se conserva la precisión completa de JavaScript durante los cálculos. Solo la presentación usa hasta 10 decimales o notación científica; elimina -0. Las fracciones de denominador hasta 1000 se reconstruyen como aproximaciones racionales de presentación y no vuelven al cálculo. Nodos muy próximos o magnitudes extremas pueden producir pérdida de precisión; se muestran los residuos y su tolerancia.
+
+### Archivos añadidos e integración
+
+- `js/newton.js`: validación de vectores, tabla triangular, coeficientes, evaluación anidada, expansión y formato.
+- `js/newton-ui.js`: entradas, selector de método, resultados, desarrollo y práctica.
+- `tests/newton-tests.js`: 33 pruebas matemáticas y gráficas, ejecutables en Node y navegador.
+- `tests/verify-newton-ui.cjs`: coordinación de ambas interfaces con un DOM simulado, incluidos 2, 3, 4, 5 y 8 puntos.
+- `index.html` y `css/styles.css`: selector y vista de Newton con tablas desplazables en pantallas pequeñas.
+- `js/grafica.js`: conserva el evaluador original y reutiliza el dibujado SVG para Newton con ejes propios.
+- `tests/test.html`: presenta las pruebas de los dos métodos.
+
+Los archivos `js/lagrange.js`, `js/ui.js`, `js/app.js`, `tests/tests.js` y `tests/verify-ui.cjs` se conservan sin cambios.
+
+### Pruebas de ambos métodos
+
+```sh
+node -e "require('./js/lagrange.js'); require('./js/newton.js'); require('./js/grafica.js'); require('./tests/tests.js'); require('./tests/newton-tests.js');"
+node tests/verify-ui.cjs
+node tests/verify-newton-ui.cjs
+```
+
+También puedes abrir `tests/test.html`. La batería comprueba las seis diferencias de la Sesión 9, coeficientes, ambas formas del polinomio, 139 ms, reproducción de nodos, ejercicios de la GT, casos de 2, 3, 5 y 8 puntos, decimales, negativos, orden de nodos, validaciones, precisión, gráfica y extrapolación. Las 19 pruebas originales de Lagrange permanecen.

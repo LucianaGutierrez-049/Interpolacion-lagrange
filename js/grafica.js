@@ -10,7 +10,18 @@
     });
     return {points: r.points, curva, evaluado: {x: r.x, y: r.value}, a, b, extrapolacion: r.x < min || r.x > max};
   }
-  function dibujar(svg, data) {
+  // Newton usa la misma curva SVG y las mismas escalas; cambia su evaluador.
+  function prepararNewton(resultado) {
+    const points = resultado.X.map((x, i) => ({x, y: resultado.Y[i]}));
+    const a = Math.min(...resultado.X, resultado.x), b = Math.max(...resultado.X, resultado.x);
+    const curva = Array.from({length: 401}, (_, i) => {
+      const x = a + (b - a) * i / 400;
+      return {x, y: Newton.evaluar(resultado.X, resultado.a, x)};
+    });
+    return {points, curva, evaluado: {x: resultado.x, y: resultado.value}, a, b,
+      extrapolacion: resultado.extrapolacion};
+  }
+  function dibujar(svg, data, opciones = {}) {
     const f = Lagrange.formato;
     let lo = Math.min(...data.curva.map(p => p.y), ...data.points.map(p => p.y), data.evaluado.y);
     let hi = Math.max(...data.curva.map(p => p.y), ...data.points.map(p => p.y), data.evaluado.y);
@@ -19,19 +30,20 @@
     if (![lo, hi, data.b-data.a, hi-lo].every(Number.isFinite) || hi === lo) throw new Error('El rango de estos datos es demasiado grande o pequeño para graficarlo.');
     const X = x => 85 + (x - data.a) / (data.b - data.a) * 665;
     const Y = y => 345 - (y - lo) / (hi - lo) * 310;
-    let out = '<title>Gráfica de interpolación de Lagrange</title><desc>Cuatro nodos experimentales, curva polinómica y punto evaluado destacado.</desc>';
+    const escapar = s => String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+    let out = `<title>Gráfica de interpolación de ${escapar(opciones.metodo || 'Lagrange')}</title><desc>${data.points.length} nodos experimentales, curva polinómica y punto evaluado destacado.</desc>`;
     for (let i=0; i<=5; i++) {
       const x=data.a+(data.b-data.a)*i/5, y=lo+(hi-lo)*i/5;
       const tick = n => f(Number(n.toPrecision(4)));
       out += `<path class="grid" d="M ${X(x)} 35 V345 M85 ${Y(y)} H750"/><text x="${X(x)}" y="369" text-anchor="middle">${tick(x)}</text><text x="75" y="${Y(y)+4}" text-anchor="end">${tick(y)}</text>`;
     }
-    out += '<path class="axis" d="M85 35 V345 H750"/><text x="415" y="405" text-anchor="middle">Memoria asignada (GB)</text><text transform="translate(20 190) rotate(-90)" text-anchor="middle">Latencia media (ms)</text>';
+    out += `<path class="axis" d="M85 35 V345 H750"/><text x="415" y="405" text-anchor="middle">${escapar(opciones.ejeX || 'Memoria asignada (GB)')}</text><text transform="translate(20 190) rotate(-90)" text-anchor="middle">${escapar(opciones.ejeY || 'Latencia media (ms)')}</text>`;
     out += `<path class="curve" d="${data.curva.map((p,i)=>`${i?'L':'M'} ${X(p.x)} ${Y(p.y)}`).join(' ')}"/>`;
     data.points.forEach(p => {out += `<circle class="node" cx="${X(p.x)}" cy="${Y(p.y)}" r="6"><title>Dato (${f(p.x)}, ${f(p.y)})</title></circle>`;});
     const p=data.evaluado;
     out += `<path class="guide" d="M${X(p.x)} 345 V${Y(p.y)} H85"/><circle class="evaluated" cx="${X(p.x)}" cy="${Y(p.y)}" r="8"><title>Punto evaluado (${f(p.x)}, ${f(p.y)})</title></circle>`;
     svg.innerHTML=out;
   }
-  root.Grafica={preparar,dibujar};
+  root.Grafica={preparar,prepararNewton,dibujar};
   if(typeof module!=='undefined') module.exports=root.Grafica;
 })(globalThis);
